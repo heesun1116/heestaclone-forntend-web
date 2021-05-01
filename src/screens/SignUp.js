@@ -1,19 +1,23 @@
-import { faFacebookF, faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import styled from "styled-components";
 import routes from "../routes";
 import AuthLayout from "../components/auth/AuthLayout";
 import Button from "../components/auth/Button";
-import Separator from "../components/auth/Separator";
 import Input from "../components/auth/Input";
 import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
 import { FatLink } from "../components/shared";
 
+import PageTitle from "../components/PageTitle";
+import { useForm } from "react-hook-form";
+
 const SignUp = () => {
+  const { register } = useForm();
   return (
     <AuthLayout>
+      <PageTitle title="SignUp" />
       <FormBox>
         <HeaderContainer>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
@@ -22,13 +26,45 @@ const SignUp = () => {
           </SubTitle>
         </HeaderContainer>
         <form>
-          <Input type="email" placeholder="Email" />
-          <Input type="text" placeholder="Name" />
-          <Input type="text" placeholder="Username" />
-          <Input type="password" placeholder="password" />
+          <Input
+            ref={register({
+              required: "First Name is required.",
+            })}
+            name="firstName"
+            type="text"
+            placeholder="First Name"
+          />
+          <Input
+            ref={register}
+            name="lastName"
+            type="text"
+            placeholder="Last Name"
+          />
+          <Input
+            ref={register({
+              required: "Email is required.",
+            })}
+            name="email"
+            type="email"
+            placeholder="Email"
+          />
+          <Input
+            ref={register({
+              required: "User Name is required.",
+            })}
+            name="password"
+            type="text"
+            placeholder="Username"
+          />
+          <Input
+            ref={register({
+              required: "password is required.",
+            })}
+            type="password"
+            placeholder="password"
+          />
           <Button type="submit" value="Sing UP" />
         </form>
-        <Separator />
       </FormBox>
 
       <BottomBox

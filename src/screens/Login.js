@@ -1,27 +1,110 @@
 import { faFacebookF, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-
 import styled from "styled-components";
 import routes from "../routes";
 import AuthLayout from "../components/auth/AuthLayout";
-
 import Button from "../components/auth/Button";
 import Separator from "../components/auth/Separator";
 import Input from "../components/auth/Input";
 import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
+import PageTitle from "../components/PageTitle";
+import { useForm } from "react-hook-form";
+import FormError from "../components/auth/FormError";
+import { gql, useMutation } from "@apollo/client";
+import { logUserIn } from "../apollo";
+
+const LOGIN_MUTATION = gql`
+  mutation login($userName: String!, $password: String!) {
+    login(userName: $userName, password: $password) {
+      ok
+      token
+      error
+    }
+  }
+`;
+
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    errors,
+    formState,
+    getValues,
+    setError,
+    clearErrors,
+  } = useForm({
+    mode: "onChange",
+  });
+  //onCompleted : A callback executed once your mutation successfully completes
+  const onCompleted = (data) => {
+    const {
+      login: { ok, error, token },
+    } = data;
+    if (!ok) {
+      return setError("result", { message: error });
+    }
+    if (token) {
+      logUserIn(token);
+    }
+  };
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    onCompleted,
+  });
+  const onSubmitValid = (data) => {
+    if (loading) {
+      return;
+    }
+    const { username, password } = getValues();
+    login({
+      variables: { userName: username, password },
+    });
+  };
+
+  const clearLoginError = () => {
+    clearErrors("result");
+  };
   return (
     <AuthLayout>
+      <PageTitle title="Login" />
       <FormBox>
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <form>
-          <Input type="text" placeholder="Username" />
-          <Input type="password" placeholder="Password" />
-          <Button type="submit" value="Login" />
+        <form onSubmit={handleSubmit(onSubmitValid)}>
+          <Input
+            ref={register({
+              required: "user name is required",
+              minLength: {
+                value: 1,
+                message: "User name is should be longer",
+              },
+            })}
+            onChange={clearLoginError}
+            name="username"
+            type="text"
+            placeholder="Username"
+            hasError={Boolean(errors?.username?.message)}
+          />
+          <FormError message={errors?.username?.message} />
+          <Input
+            ref={register({
+              required: "password is required",
+            })}
+            name="password"
+            type="password"
+            placeholder="Password"
+            hasError={Boolean(errors?.password?.message)}
+          />
+          <FormError message={errors?.password?.message} />
+
+          <Button
+            type="submit"
+            value={loading ? "Loading..." : "Login"}
+            disabled={!formState.isValid || loading}
+          />
+          <FormError message={errors?.result?.message} />
         </form>
         <Separator />
         <FacebookLogin>
