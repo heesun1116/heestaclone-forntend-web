@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
 import { logUserIn } from "../apollo";
+import { useLocation } from "react-router";
 
 const LOGIN_MUTATION = gql`
   mutation login($userName: String!, $password: String!) {
@@ -24,8 +25,12 @@ const LOGIN_MUTATION = gql`
     }
   }
 `;
-
+const Notification = styled.div`
+  color: #2ecc71;
+  padding-top: 10px;
+`;
 const Login = () => {
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -36,6 +41,10 @@ const Login = () => {
     clearErrors,
   } = useForm({
     mode: "onChange",
+    defaultValues: {
+      username: location?.state?.userName || "",
+      password: location?.state?.password || "",
+    },
   });
   //onCompleted : A callback executed once your mutation successfully completes
   const onCompleted = (data) => {
@@ -61,7 +70,7 @@ const Login = () => {
       variables: { userName: username, password },
     });
   };
-
+  //reset error
   const clearLoginError = () => {
     clearErrors("result");
   };
@@ -72,6 +81,7 @@ const Login = () => {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
+        <Notification>{location?.state?.message}</Notification>
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             ref={register({
@@ -92,6 +102,7 @@ const Login = () => {
             ref={register({
               required: "password is required",
             })}
+            onChange={clearLoginError}
             name="password"
             type="password"
             placeholder="Password"
