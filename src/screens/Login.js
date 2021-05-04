@@ -56,6 +56,7 @@ const Login = () => {
     }
     if (token) {
       logUserIn(token);
+      localStorage.setItem("TOKEN", token);
     }
   };
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {

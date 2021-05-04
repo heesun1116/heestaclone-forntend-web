@@ -1,19 +1,22 @@
-import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
-
-const TOKEN = "token";
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  makeVar,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+const TOKEN = "TOKEN";
 const DARK_MODE = "DARK_MODE";
 //remember token
 export const isLoggedInVar = makeVar(Boolean(localStorage.getItem(TOKEN))); //for storing local state outside of the Apollo Client cache.
 //login to server
 export const logUserIn = (token) => {
-  localStorage.setItem(TOKEN, token); //(keyname, keyValue)
+  localStorage.setItem(TOKEN, token);
   isLoggedInVar(true);
 };
 //log out to server
-export const logUserOut = (history) => {
-  localStorage.removeItem(TOKEN); //(keyname, keyValue)
-  isLoggedInVar(false);
-  history.replace();
+export const logUserOut = () => {
+  localStorage.removeItem(TOKEN);
   window.location.reload();
 };
 
@@ -29,7 +32,20 @@ export const disableDarkMode = () => {
   darkModeVar(false);
 };
 
-export const client = new ApolloClient({
+const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
+});
+const authLink = setContext((_, { headers }) => {
+  // put the token into headers context
+  return {
+    headers: {
+      ...headers, //previous header
+      token: localStorage.getItem(TOKEN),
+    },
+  };
+});
+
+export const client = new ApolloClient({
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
