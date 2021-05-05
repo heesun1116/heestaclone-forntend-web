@@ -1,10 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
-import { useHistory } from "react-router";
-import styled from "styled-components";
-import { logUserOut } from "../apollo";
-import Avatar from "../components/Avatar";
-import { FatText } from "../components/shared";
+import Photo from "../components/Feed/Photo";
+import PageTitle from "../components/PageTitle";
+
 const FEED_QUERY = gql`
   query seeFeed {
     seeFeed {
@@ -13,47 +11,35 @@ const FEED_QUERY = gql`
         userName
         avatar
       }
-      file
       comments {
         id
+        user {
+          userName
+        }
+        payload
+        isMine
+        createdAt
       }
+      file
+      commentNumber
       caption
       likes
       createdAt
       isMine
+      isLiked
     }
   }
 `;
 
-const PhotoContainer = styled.div`
-  background-color: white;
-  border: 1px solid ${(props) => props.theme.borderColor};
-  margin-bottom: 20px;
-`;
-const PhotoHeader = styled.div`
-  padding: 5px;
-  display: flex;
-  align-items: center;
-`;
-
-const Username = styled(FatText)`
-  margin-left: 10px;
-`;
 const Home = () => {
   const { data } = useQuery(FEED_QUERY);
-  console.log(data);
-  const histroy = useHistory();
+
   return (
     <div>
+      <PageTitle title="Home" />
       {data?.seeFeed?.map((photo) => (
-        <PhotoContainer key={photo.id}>
-          <PhotoHeader>
-            <Avatar url={photo.user.avatar} />
-            <Username>{photo.user.userName}</Username>
-          </PhotoHeader>
-        </PhotoContainer>
+        <Photo key={photo.id} {...photo} />
       ))}
-      <button onClick={() => logUserOut(histroy)}>Logout in Now</button>
     </div>
   );
 };
