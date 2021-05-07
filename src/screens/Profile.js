@@ -9,6 +9,20 @@ import PageTitle from "../components/PageTitle";
 import { FatText } from "../components/shared";
 import { PHOTO_FRAGMENT } from "../fragments";
 
+const FOLLOW_USER = gql`
+  mutation followUser($userName: String!) {
+    followUser(userName: $userName) {
+      ok
+    }
+  }
+`;
+const UNFOLLOW_USER = gql`
+  mutation unfollowUser($userName: String!) {
+    unfollowUser(userName: $userName) {
+      ok
+    }
+  }
+`;
 const SEE_PROFILE_QUERY = gql`
   query seeProfile($userName: String!) {
     seeProfile(userName: $userName) {
@@ -108,7 +122,7 @@ const Icon = styled.span`
 const ProfileBtn = styled(Button).attrs({
   as: "span",
 })`
-  margin-left: 10px;
+  margin-left: 30px;
   margin-top: 0px;
   cursor: pointer;
 `;
@@ -120,7 +134,17 @@ function Profile() {
       userName,
     },
   });
-
+  const getButton = (seeProfile) => {
+    const { isMe, isFollowing } = seeProfile;
+    if (isMe) {
+      return <ProfileBtn>Edit Profile</ProfileBtn>;
+    }
+    if (isFollowing) {
+      return <ProfileBtn>Unfollow</ProfileBtn>;
+    } else {
+      return <ProfileBtn>follow</ProfileBtn>;
+    }
+  };
   return (
     <div>
       <PageTitle
@@ -133,8 +157,8 @@ function Profile() {
         <Column>
           <Row>
             <Username>{data?.seeProfile?.userName}</Username>
-            {data?.seeProfile?.isMe ? "Edit Profile" : null}
-            {!data?.seeProfile?.isFollowing ? "Unfollow" : "Follow"}
+
+            {data?.seeProfile ? getButton(data.seeProfile) : null}
           </Row>
           <Row>
             <List>
