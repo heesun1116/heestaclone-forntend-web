@@ -2,9 +2,10 @@ import styled from "styled-components";
 import { FatText } from "../shared";
 import PropTypes from "prop-types";
 import React from "react";
-import sanitizeHtml from "sanitize-html";
+
 import { Link } from "react-router-dom";
 import { useMutation, gql } from "@apollo/client";
+import sanitizeHtml from "sanitize-html";
 
 const DELETE_COMMENT_MUTATION = gql`
   mutation deleteComment($id: Int!) {
@@ -13,29 +14,11 @@ const DELETE_COMMENT_MUTATION = gql`
     }
   }
 `;
-const CommentContainer = styled.div`
-  button {
-    background-color: inherit;
-    border: none;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
 
-const CommentCaption = styled.span`
-  margin-left: 10px;
-  a {
-    background-color: inherit;
-    color: ${(props) => props.theme.accent};
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
 function Comment({ id, author, payload, isMine, photoId }) {
+  const cleanedPayload = sanitizeHtml(payload, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+  });
   const updateDeleteComment = (cache, result) => {
     const {
       data: {
@@ -70,17 +53,7 @@ function Comment({ id, author, payload, isMine, photoId }) {
         <FatText>{author}</FatText>
       </Link>
       <CommentCaption>
-        {payload.split(" ").map((word, index) =>
-          /#[\w]+/.test(word) ? (
-            <React.Fragment key={index}>
-              <Link to={`/hashtags/${word}`} key={index}>
-                {word}
-              </Link>{" "}
-            </React.Fragment>
-          ) : (
-            <React.Fragment key={index}>{word} </React.Fragment>
-          )
-        )}
+        <React.Fragment key={id}>{cleanedPayload}</React.Fragment>
       </CommentCaption>
       {isMine ? <button onClick={onDeleteClick}>❌</button> : null}
     </CommentContainer>
@@ -94,5 +67,26 @@ Comment.propTypes = {
   author: PropTypes.string.isRequired,
   payload: PropTypes.string.isRequired,
 };
+const CommentContainer = styled.div`
+  button {
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
 
+const CommentCaption = styled.span`
+  margin-left: 10px;
+  a {
+    background-color: inherit;
+    color: ${(props) => props.theme.accent};
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
 export default Comment;

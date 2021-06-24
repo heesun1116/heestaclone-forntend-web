@@ -15,31 +15,6 @@ const CREATE_COMMENT_MUTATION = gql`
   }
 `;
 
-const CommentsContainer = styled.div`
-  margin-top: 20px;
-`;
-const CommentCount = styled.span`
-  opacity: 0.7;
-  margin: 10px 0px;
-  display: block;
-  font-weight: 600;
-  font-size: 10px;
-`;
-
-const PostCommentContainer = styled.div`
-  margin-top: 10px;
-  padding-top: 15px;
-  padding-bottom: 10px;
-  border-top: 1px solid ${(props) => props.theme.borderColor};
-`;
-
-const PostCommentInput = styled.input`
-  width: 100%;
-  &::placeholder {
-    font-size: 12px;
-  }
-`;
-
 function Comments({ photoId, author, caption, commentNumber, comments }) {
   const { data: userData } = useUser();
   const { register, handleSubmit, setValue, getValues } = useForm();
@@ -156,5 +131,31 @@ Comments.propTypes = {
     })
   ),
 };
+const CommentsContainer = styled.div`
+  margin-top: 16px;
+`;
+const CommentCount = styled.span`
+  opacity: 0.7;
+  margin: 10px 0px;
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+`;
 
+const PostCommentContainer = styled.div`
+  margin-top: 22px;
+`;
+
+const PostCommentInput = styled.input`
+  width: 459px;
+  height: 33px;
+  border-radius: 5px;
+  box-shadow: 0 0 30px 7px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  width: 100%;
+  &::placeholder {
+    padding-left: 23px;
+    font-size: 12px;
+  }
+`;
 export default Comments;

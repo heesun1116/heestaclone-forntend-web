@@ -11,6 +11,9 @@ import routes from "./routes";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "./components/Layout";
 import Profile from "./screens/Profile";
+import Edit from "./screens/Edit";
+import SeeUser from "./screens/SeeUser";
+
 function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   const darkMode = useReactiveVar(darkModeVar);
@@ -39,6 +42,16 @@ function App() {
               <Route path={`/users/:userName`}>
                 <Layout>
                   <Profile />
+                </Layout>
+              </Route>
+              <Route path={`/editprofile/:userName`} exact>
+                <Layout>
+                  <Edit />
+                </Layout>
+              </Route>
+              <Route path={`/seeUsers`} exact>
+                <Layout>
+                  <SeeUser />
                 </Layout>
               </Route>
               <Route>

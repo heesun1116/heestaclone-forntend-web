@@ -23,27 +23,33 @@ const TOGGLE_LIKE_MUTATION = gql`
   }
 `;
 const PhotoContainer = styled.div`
-  background-color: white;
-  border: 1px solid ${(props) => props.theme.borderColor};
-  margin-bottom: 20px;
-  max-width: 615px;
-  border-radius: 15px;
+  block-size: fit-content;
+  /* border: 1px solid ${(props) => props.theme.borderColor}; */
+  width: 459px;
 `;
 const PhotoHeader = styled.div`
-  padding: 15px;
+  height: 56px;
+  margin-top: 19px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 
-const Username = styled(FatText)`
-  margin-left: 15px;
+const Username = styled.span`
+  margin-left: 13px;
+  font-family: NotoSans;
+  font-size: 18px;
+  font-weight: bold;
+`;
+const UserNameDiv = styled.div`
+  height: 25px;
 `;
 const PhotoFile = styled.img`
-  width: 100%;
+  width: 459px;
+  height: 459px;
+  border-radius: 20px;
 `;
-const PhotoData = styled.div`
-  padding: 15px;
-`;
+const PhotoData = styled.div``;
 
 const PhotoActions = styled.div`
   display: flex;
@@ -59,15 +65,21 @@ const PhotoActions = styled.div`
 `;
 
 const PhotoAction = styled.div`
-  margin-right: 10px;
+  display: flex;
   cursor: pointer;
 `;
 
 const Likes = styled(FatText)`
-  margin-top: 10px;
   display: block;
+  margin-left: 11px;
+  font-family: NotoSans;
+  font-size: 20px;
+  font-weight: bold;
 `;
-
+const AvatarDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
 function Photo({
   id,
   user,
@@ -122,39 +134,31 @@ function Photo({
     update: updateToggleLike, // direct link to apollo cache
     // refetchQueries: [{ query: FEED_QUERY }], // call a  query agin(indirects)
   });
+  console.log(user);
   return (
     <PhotoContainer key={id}>
-      <PhotoHeader>
-        <Link to={`/users/${user.userName}`}>
-          <Avatar lg url={user.avatar} />
-        </Link>{" "}
-        <Link to={`/users/${user.userName}`}>
-          <Username>{user.userName}</Username>
-        </Link>{" "}
-      </PhotoHeader>
       <PhotoFile src={file} />
+      <PhotoHeader>
+        <AvatarDiv>
+          <Link to={`/users/${user.userName}`}>
+            <Avatar lg url={user.avatar} />
+          </Link>{" "}
+          <UserNameDiv>
+            <Link to={`/users/${user.userName}`}>
+              <Username>{user.userName}</Username>
+            </Link>{" "}
+          </UserNameDiv>
+        </AvatarDiv>
+        <PhotoAction onClick={toggleLikeMutation}>
+          <FontAwesomeIcon
+            style={{ color: isLiked ? "#FF6E7F" : "inherit" }}
+            size={"lg"}
+            icon={isLiked ? SoildHeart : faHeart}
+          />
+          <Likes>{likes === 1 ? "1" : `${likes} `}</Likes>
+        </PhotoAction>
+      </PhotoHeader>
       <PhotoData>
-        <PhotoActions>
-          <div>
-            <PhotoAction onClick={toggleLikeMutation}>
-              <FontAwesomeIcon
-                style={{ color: isLiked ? "tomato" : "inherit" }}
-                size={"lg"}
-                icon={isLiked ? SoildHeart : faHeart}
-              />
-            </PhotoAction>
-            <PhotoAction>
-              <FontAwesomeIcon size={"lg"} icon={faComment} />
-            </PhotoAction>
-            <PhotoAction>
-              <FontAwesomeIcon size={"lg"} icon={faPaperPlane} />
-            </PhotoAction>
-          </div>
-          <div>
-            <FontAwesomeIcon size={"lg"} icon={faBookmark} />
-          </div>
-        </PhotoActions>
-        <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
         <Comments
           photoId={id}
           author={user.userName}

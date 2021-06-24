@@ -1,14 +1,19 @@
 import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
-import { faComment, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { logUserOut } from "../apollo";
 import Button from "../components/auth/Button";
+import Avatar from "../components/Avatar";
 import PageTitle from "../components/PageTitle";
 import { FatText } from "../components/shared";
 import { PHOTO_FRAGMENT } from "../fragments";
 import useUser, { ME_QUERY } from "../hooks/useUser";
+import Delete from "./Delete";
 
 const FOLLOW_USER_MUTATION = gql`
   mutation followUser($userName: String!) {
@@ -44,89 +49,6 @@ const SEE_PROFILE_QUERY = gql`
   }
   ${PHOTO_FRAGMENT}
 `;
-const Header = styled.div`
-  display: flex;
-  margin-top: 30px;
-`;
-const Avatar = styled.img`
-  margin-left: 50px;
-  height: 160px;
-  width: 160px;
-  border-radius: 50%;
-  margin-right: 150px;
-  background-color: #2c2c2c;
-`;
-const Column = styled.div``;
-const Username = styled.h3`
-  font-size: 28px;
-  font-weight: 400;
-`;
-const Row = styled.div`
-  margin-bottom: 20px;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-`;
-const List = styled.ul`
-  display: flex;
-`;
-const Item = styled.li`
-  margin-right: 20px;
-`;
-const Value = styled(FatText)`
-  font-size: 18px;
-`;
-const Name = styled(FatText)`
-  font-size: 20px;
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-auto-rows: 290px;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-top: 50px;
-`;
-
-const Photo = styled.div`
-  background-image: url(${(props) => props.bg});
-  background-size: cover;
-  position: relative;
-`;
-
-const Icons = styled.div`
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  opacity: 0;
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const Icon = styled.span`
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  margin: 0px 5px;
-  svg {
-    font-size: 14px;
-    margin-right: 5px;
-  }
-`;
-
-const ProfileBtn = styled(Button).attrs({
-  as: "span",
-})`
-  margin-left: 30px;
-  margin-top: 0px;
-  cursor: pointer;
-`;
 
 function Profile() {
   const { userName } = useParams();
@@ -137,6 +59,7 @@ function Profile() {
       userName,
     },
   });
+
   const unfollowUserUpdate = (cache, result) => {
     const {
       data: {
@@ -219,11 +142,14 @@ function Profile() {
     //   { query: ME_QUERY },
     // ],
   });
-
   const getButton = (seeProfile) => {
     const { isMe, isFollowing } = seeProfile;
     if (isMe) {
-      return <ProfileBtn>Edit Profile</ProfileBtn>;
+      return (
+        <Link to={`/editprofile/${data?.seeProfile?.userName}`}>
+          <ProfileBtn>Edit Profile</ProfileBtn>
+        </Link>
+      );
     }
     if (isFollowing) {
       return <ProfileBtn onClick={unfollowUser}>Unfollow</ProfileBtn>;
@@ -231,6 +157,14 @@ function Profile() {
       return <ProfileBtn onClick={followUser}>follow</ProfileBtn>;
     }
   };
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div>
       <PageTitle
@@ -238,56 +172,159 @@ function Profile() {
           loading ? "Loading..." : `${data?.seeProfile?.userName}'s Profile`
         }
       />
-      <Header>
-        <Avatar src={data?.seeProfile?.avatar} />
-        <Column>
-          <Row>
-            <Username>{data?.seeProfile?.userName}</Username>
+      <Container>
+        <Header>
+          <Avatar url={data?.seeProfile?.avatar} profile />
+          <Username>
+            {data?.seeProfile?.userName} {data?.seeProfile?.firstName}
+            {"  "}
+            {data?.seeProfile?.lastName}
+          </Username>
+          <ValueDiv>
+            <Value>{data?.seeProfile?.totalFollowers}</Value> followers
+            <Value>{data?.seeProfile?.totalFollowing}</Value> following
+          </ValueDiv>
+          {data?.seeProfile ? getButton(data.seeProfile) : null}
 
-            {data?.seeProfile ? getButton(data.seeProfile) : null}
-          </Row>
-          <Row>
-            <List>
-              <Item>
-                <span>
-                  <Value>{data?.seeProfile?.totalFollowers}</Value> followers
-                </span>
-              </Item>
-              <Item>
-                <span>
-                  <Value>{data?.seeProfile?.totalFollowing}</Value> following
-                </span>
-              </Item>
-            </List>
-          </Row>
-          <Row>
-            <Name>
-              {data?.seeProfile?.firstName}
-              {"  "}
-              {data?.seeProfile?.lastName}
-            </Name>
-          </Row>
           <Row>{data?.seeProfile?.bio}</Row>
-        </Column>
-      </Header>
-      <Grid>
-        {data?.seeProfile?.photos.map((photo) => (
-          <Photo key={photo.id} bg={photo.file}>
-            <Icons>
-              <Icon>
-                <FontAwesomeIcon icon={faHeart} />
-                {photo.likes}
-              </Icon>
-              <Icon>
-                <FontAwesomeIcon icon={faComment} />
-                {photo.commentNumber}
-              </Icon>
-            </Icons>
-          </Photo>
-        ))}
-      </Grid>
+        </Header>
+        <Grid>
+          {data?.seeProfile?.photos.map((photo) => (
+            <Photo key={photo.id} bg={photo.file}>
+              <Icons>
+                <Icon>
+                  <FontAwesomeIcon icon={faHeart} />
+                  {photo.likes}
+                </Icon>
+                <Icon>
+                  <FontAwesomeIcon icon={faComment} />
+                  {photo.commentNumber}
+                </Icon>
+                <Icon>
+                  {data?.seeProfile?.isMe ? (
+                    <FontAwesomeIcon onClick={openModal} icon={faTrash} />
+                  ) : null}
+                  {/* <DeleteButton
+                    userName={userName}
+                    id={photo.id}
+                    isMe={data?.seeProfile?.isMe}
+                    open={openModal}
+                  /> */}
+                  <Delete
+                    open={modalOpen}
+                    userName={userName}
+                    close={closeModal}
+                    id={photo.id}
+                  />
+                </Icon>
+              </Icons>
+            </Photo>
+          ))}
+        </Grid>
+      </Container>
     </div>
   );
 }
 
 export default Profile;
+
+const Container = styled.div`
+  display: felx;
+  width: 1357px;
+  margin: 63px auto 0 auto;
+  gap: 80px;
+`;
+const Header = styled.div`
+  display: flex;
+  width: 289px;
+  align-items: center;
+  flex-direction: column;
+`;
+const Username = styled.h3`
+  margin-top: 17px;
+  font-family: Oswald;
+  font-size: 25px;
+`;
+
+const Row = styled.div`
+  width: 216px;
+  text-align: center;
+  margin-top: 32px;
+  font-family: NotoSans;
+  font-size: 14px;
+`;
+
+const Value = styled.span`
+  font-family: NotoSans;
+  font-size: 20px;
+  &:nth-child(2) {
+    margin-left: 30px;
+  }
+`;
+const Name = styled(FatText)`
+  font-size: 20px;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 14px;
+`;
+
+const Photo = styled.div`
+  background-image: url(${(props) => props.bg});
+  background-size: cover;
+  position: relative;
+  border-radius: 20px;
+  width: 320px;
+  height: 320px;
+`;
+const ValueDiv = styled.div`
+  margin-top: 19px;
+  font-family: NotoSans;
+  font-size: 20px;
+`;
+
+const Icons = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  opacity: 0;
+  border-radius: 20px;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+const Icon = styled.span`
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  margin: 0px 5px;
+  svg {
+    font-size: 14px;
+    margin-right: 5px;
+  }
+`;
+
+const ProfileBtn = styled.button`
+  background: linear-gradient(90.27deg, #ff6e7f 0.23%, #bfe9ff 99.77%);
+  border-radius: 15px;
+  border: none;
+  color: white;
+  font-family: NotoSans;
+  font-size: 20px;
+  font-weight: bold;
+  width: 289px;
+  height: 50px;
+  margin-top: 21px;
+
+  padding: 10px 50px;
+  cursor: pointer;
+`;

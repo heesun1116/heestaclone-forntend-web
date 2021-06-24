@@ -1,17 +1,19 @@
 import styled from "styled-components";
 
 const Button = styled.input`
-  margin-top: 10px;
-  background-color: ${(props) => props.theme.accent};
   color: white;
   text-align: center;
-  padding: 8px 0px;
   border: none;
-  font-weight: 600;
-  font-size: 12px;
-  width: 100%;
-  border-radius: 3px;
-  opacity: ${(props) => (props.disabled ? "0.3" : "1")};
+  font-family: NotoSans;
+  font-size: 30px;
+  font-weight: bold;
+  width: 289px;
+  height: 50px;
+  margin-left: 253px;
+  border-radius: 15px;
+  margin-top: 7px;
+  background-color: #2b90d9;
+  /* opacity: ${(props) => (props.disabled ? "0.3" : "1")}; */
 `;
 
 export default Button;

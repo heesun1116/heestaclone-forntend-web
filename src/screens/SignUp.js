@@ -1,5 +1,3 @@
-import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import styled from "styled-components";
 import routes from "../routes";
@@ -8,7 +6,15 @@ import Button from "../components/auth/Button";
 import Input from "../components/auth/Input";
 import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
-import { FatLink } from "../components/shared";
+import Logo from "../components/Logo.svg";
+
+import {
+  AuthTitle,
+  AuthH3,
+  LinkSpan,
+  InputSepLeft,
+  InputSepRight,
+} from "../components/shared";
 
 import PageTitle from "../components/PageTitle";
 import { useForm } from "react-hook-form";
@@ -16,6 +22,7 @@ import FormError from "../components/auth/FormError";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 
 const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccount(
@@ -90,38 +97,18 @@ const SignUp = () => {
       <PageTitle title="SignUp" />
       <FormBox>
         <HeaderContainer>
-          <FontAwesomeIcon icon={faInstagram} size="3x" />
-          <SubTitle>
-            Sign up to see photos and videos from your friends.
-          </SubTitle>
+          <div>
+            <img src={Logo} alt="logo" />
+            <SignSpan>Create Account</SignSpan>
+          </div>
+          <LoginDiv>
+            <LoginH3>Already have an account?</LoginH3>
+            <Link to={routes.home}>
+              <LoginSpan>Login</LoginSpan>
+            </Link>
+          </LoginDiv>
         </HeaderContainer>
         <form onSubmit={handleSubmit(onSubmitValid)}>
-          <Input
-            ref={register({
-              required: "First Name is required.",
-            })}
-            onChange={clearSingUpError}
-            name="firstName"
-            type="text"
-            placeholder="First Name"
-          />
-          <FormError message={errors?.firstName?.message} />
-          <Input
-            ref={register}
-            name="lastName"
-            type="text"
-            placeholder="Last Name"
-          />
-          <Input
-            onChange={clearSingUpError}
-            ref={register({
-              required: "Email is required.",
-            })}
-            name="email"
-            type="email"
-            placeholder="Email"
-          />
-          <FormError message={errors?.email?.message} />
           <Input
             onChange={clearSingUpError}
             ref={register({
@@ -132,6 +119,34 @@ const SignUp = () => {
             placeholder="Username"
           />
           <FormError message={errors?.username?.message} />
+          <NameDiv>
+            <InputSepLeft
+              ref={register({
+                required: "First Name is required.",
+              })}
+              onChange={clearSingUpError}
+              name="firstName"
+              type="text"
+              placeholder="First Name"
+            />
+            <FormError message={errors?.firstName?.message} />
+            <InputSepRight
+              ref={register}
+              name="lastName"
+              type="text"
+              placeholder="Last Name"
+            />
+          </NameDiv>
+          <Input
+            onChange={clearSingUpError}
+            ref={register({
+              required: "Email is required.",
+            })}
+            name="email"
+            type="email"
+            placeholder="Email"
+          />
+          <FormError message={errors?.email?.message} />
 
           <Input
             onChange={clearSingUpError}
@@ -150,23 +165,29 @@ const SignUp = () => {
           />
         </form>
       </FormBox>
-
-      <BottomBox
-        cta={"Have an account?"}
-        link={routes.home}
-        linkText="Log In"
-      />
     </AuthLayout>
   );
 };
+
+export default SignUp;
 const HeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-const SubTitle = styled(FatLink)`
-  font-size: 16px;
-  text-align: center;
-  margin-top: 10px;
+
+const SignSpan = styled(AuthTitle)``;
+
+const LoginDiv = styled.div`
+  margin-top: 25px;
+  display: flex;
+  width: 280px;
+  height: 27px;
+  align-items: center;
 `;
-export default SignUp;
+const LoginSpan = styled(LinkSpan)``;
+
+const LoginH3 = styled(AuthH3)``;
+const NameDiv = styled.div`
+  display: flex;
+`;

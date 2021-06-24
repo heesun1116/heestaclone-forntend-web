@@ -1,19 +1,24 @@
 import styled from "styled-components";
 
 const Input = styled.input`
-  width: 100%;
-  border-radius: 3px;
-  padding: 7px;
-  background-color: #fafafa;
-  border: 0.5px solid
-    ${(props) => (props.hasError ? "orangered" : props.theme.borderColor)};
+  font-family: NotoSans;
+  font-size: 23.9px;
+  width: 524px;
+  border-radius: 15px;
+  height: 58px;
+  padding: 14px 23px;
+  background-color: #f0f0f0;
   margin-top: 5px;
   box-sizing: border-box;
   &::placeholder {
-    font-size: 12px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #b0b0b0;
+    font-family: NotoSans;
   }
   &:focus {
-    border-color: rgb(38, 38, 38);
+    box-shadow: 0 0 45px 7px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
   }
 `;
 

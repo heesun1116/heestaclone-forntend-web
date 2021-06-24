@@ -1,10 +1,13 @@
 import {
   ApolloClient,
   createHttpLink,
+  HttpLink,
   InMemoryCache,
   makeVar,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
+import { createUploadLink } from "apollo-upload-client";
 const TOKEN = "TOKEN";
 const DARK_MODE = "DARK_MODE";
 //remember token
@@ -35,6 +38,9 @@ export const disableDarkMode = () => {
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
 });
+const uplaodHttpLink = createUploadLink({
+  uri: "http://localhost:4000/graphql",
+});
 const authLink = setContext((_, { headers }) => {
   // put the token into headers context
   return {
@@ -44,9 +50,16 @@ const authLink = setContext((_, { headers }) => {
     },
   };
 });
-
+const onErrorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    console.log(`Graph`, graphQLErrors);
+  }
+  if (networkError) {
+    console.log(`net`, networkError);
+  }
+});
 export const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(onErrorLink).concat(uplaodHttpLink),
   cache: new InMemoryCache({
     typePolicies: {
       User: {

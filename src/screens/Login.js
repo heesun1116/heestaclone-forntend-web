@@ -1,21 +1,19 @@
-import { faFacebookF, faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import styled from "styled-components";
 import routes from "../routes";
 import AuthLayout from "../components/auth/AuthLayout";
 import Button from "../components/auth/Button";
-import Separator from "../components/auth/Separator";
 import Input from "../components/auth/Input";
 import FormBox from "../components/auth/FormBox";
-import BottomBox from "../components/auth/BottomBox";
 import PageTitle from "../components/PageTitle";
 import { useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
 import { logUserIn } from "../apollo";
 import { useLocation } from "react-router";
-
+import { Link } from "react-router-dom";
+import { AuthTitle, AuthH3, LinkSpan } from "../components/shared";
+import Logo from "../components/Logo.svg";
 const LOGIN_MUTATION = gql`
   mutation login($userName: String!, $password: String!) {
     login(userName: $userName, password: $password) {
@@ -80,8 +78,15 @@ const Login = () => {
       <PageTitle title="Login" />
       <FormBox>
         <div>
-          <FontAwesomeIcon icon={faInstagram} size="3x" />
+          <img src={Logo} alt="logo" />
+          <LoginSpan>Login</LoginSpan>
         </div>
+        <SignDiv>
+          <SignH3>Don't you have an account yet?</SignH3>
+          <Link to={routes.signUp}>
+            <SingUpSpan>Sign Up</SingUpSpan>
+          </Link>
+        </SignDiv>
         <Notification>{location?.state?.message}</Notification>
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
@@ -118,27 +123,20 @@ const Login = () => {
           />
           <FormError message={errors?.result?.message} />
         </form>
-        <Separator />
-        <FacebookLogin>
-          <FontAwesomeIcon icon={faFacebookF} />
-          <span> Log IN wtih FaceBook</span>
-        </FacebookLogin>
       </FormBox>
-
-      <BottomBox
-        cta={"Don't have an account?"}
-        link={routes.signUp}
-        linkText="Sign UP"
-      />
     </AuthLayout>
   );
 };
 export default Login;
 
-const FacebookLogin = styled.div`
-  color: #40588a;
-  span {
-    margin-top: 10px;
-    font-weight: 500;
-  }
+const LoginSpan = styled(AuthTitle)``;
+const SignH3 = styled(AuthH3)``;
+const SignDiv = styled.div`
+  margin-top: 25px;
+  display: flex;
+  width: 373px;
+  height: 27px;
+  align-items: center;
 `;
+
+const SingUpSpan = styled(LinkSpan)``;
