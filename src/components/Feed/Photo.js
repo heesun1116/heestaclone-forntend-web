@@ -1,9 +1,4 @@
-import {
-  faBookmark,
-  faComment,
-  faHeart,
-  faPaperPlane,
-} from "@fortawesome/free-regular-svg-icons";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 import styled from "styled-components";
@@ -26,6 +21,9 @@ const PhotoContainer = styled.div`
   block-size: fit-content;
   /* border: 1px solid ${(props) => props.theme.borderColor}; */
   width: 459px;
+  @media screen and (max-width: 500px) {
+    width: 300px;
+  }
 `;
 const PhotoHeader = styled.div`
   height: 56px;
@@ -48,21 +46,12 @@ const PhotoFile = styled.img`
   width: 459px;
   height: 459px;
   border-radius: 20px;
+  @media screen and (max-width: 500px) {
+    width: 300px;
+    height: 300px;
+  }
 `;
 const PhotoData = styled.div``;
-
-const PhotoActions = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  div {
-    display: flex;
-    align-items: center;
-  }
-  svg {
-    font-size: 20px;
-  }
-`;
 
 const PhotoAction = styled.div`
   display: flex;

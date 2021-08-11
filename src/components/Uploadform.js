@@ -11,7 +11,7 @@ const UPLOAD_PHOTO = gql`
 `;
 const Uploadform = ({ caption }) => {
   const [filename, setFilename] = useState("");
-  const [uploadPhoto, { loading }] = useMutation(UPLOAD_PHOTO, {
+  const [uploadPhoto] = useMutation(UPLOAD_PHOTO, {
     onCompleted: (data) => {},
   });
   const submit = (e) => {
@@ -63,6 +63,10 @@ const FileLabel = styled.label`
   border-radius: 15px;
   width: 162px;
   height: 65px;
+  @media screen and (max-width: 500px) {
+    height: 53.7px;
+    font-size: 20px;
+  }
 `;
 const FileName = styled.input`
   width: 200px;
@@ -81,10 +85,16 @@ const FileName = styled.input`
     font-weight: bold;
     color: #b0b0b0;
   }
+  @media screen and (max-width: 500px) {
+    height: 53.7px;
+  }
 `;
 const FileBox = styled.div`
   display: flex;
   width: 448px;
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
 `;
 const FileInput = styled.input`
   position: absolute;
@@ -96,8 +106,5 @@ const FileInput = styled.input`
   clip: rect(0, 0, 0, 0);
   border: 0;
 `;
-const Button = styled.button`
-  margin-left: 400px;
-  cursor: pointer;
-`;
+
 export default Uploadform;

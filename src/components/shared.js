@@ -88,5 +88,5 @@ export const EditInput = styled.input`
   display: inline-block;
   border-radius: 15px;
   padding-left: 23px;
-  font-size: 20px;s
+  font-size: 20px;
 `;

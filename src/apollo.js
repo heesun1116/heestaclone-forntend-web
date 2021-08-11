@@ -1,10 +1,4 @@
-import {
-  ApolloClient,
-  createHttpLink,
-  HttpLink,
-  InMemoryCache,
-  makeVar,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
@@ -35,11 +29,14 @@ export const disableDarkMode = () => {
   darkModeVar(false);
 };
 
-const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
-});
+// const httpLink = createHttpLink({
+//   uri: "http://localhost:4000/graphql",
+// });
 const uplaodHttpLink = createUploadLink({
-  uri: "http://localhost:4000/graphql",
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://heestaclone-backend.herokuapp.com/graphql"
+      : "http://localhost:4000/graphql",
 });
 const authLink = setContext((_, { headers }) => {
   // put the token into headers context

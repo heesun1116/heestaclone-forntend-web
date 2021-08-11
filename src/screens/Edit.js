@@ -1,11 +1,10 @@
-import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { EditInput, InputSepLeft, InputSepRight } from "../components/shared";
+import { EditInput } from "../components/shared";
 import { PHOTO_FRAGMENT } from "../fragments";
-import useUser from "../hooks/useUser";
 import Polygon from "./Polygon.svg";
 const SEE_PROFILE_QUERY = gql`
   query seeProfile($userName: String!) {
@@ -56,8 +55,6 @@ const EDIT_PROFILE_MUTATION = gql`
 const Edit = () => {
   const [filename, setFilename] = useState("");
   const [file, setFile] = useState("");
-  const { data: userData } = useUser();
-  const client = useApolloClient();
   const { userName } = useParams();
   const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
     variables: {
@@ -159,7 +156,7 @@ const Edit = () => {
               type="bio"
               placeholder="bio"
             />
-            <div>
+            <Inputdiv>
               <EditInputLeft
                 defaultValue={data?.seeProfile?.firstName}
                 ref={register}
@@ -175,7 +172,7 @@ const Edit = () => {
                 type="text"
                 placeholder="Last Name"
               />
-            </div>
+            </Inputdiv>
             <Input
               defaultValue={data?.seeProfile?.email}
               onChange={clearSingUpError}
@@ -184,7 +181,7 @@ const Edit = () => {
               type="email"
               placeholder="Email"
             />
-            <form onChange={submit}>
+            <Avatarform onChange={submit}>
               <FileBox>
                 <FileLabel onChange={submit} htmlFor="fileUpload">
                   Upload Avatar
@@ -200,7 +197,7 @@ const Edit = () => {
                   placeholder="Filename"
                 />
               </FileBox>
-            </form>
+            </Avatarform>
             <Button
               type="submit"
               value={loading ? "Loading..." : "Edit profile"}
@@ -215,6 +212,18 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 81px;
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+const Avatarform = styled.form`
+  @media screen and (max-width: 375px) {
+    width: 93%;
+    display: flex;
+    justify-content: center;
+  }
 `;
 const FileLabel = styled.label`
   margin-right: 18px;
@@ -230,6 +239,9 @@ const FileLabel = styled.label`
   border-radius: 15px;
   width: 150px;
   height: 40px;
+  @media screen and (max-width: 375px) {
+    width: 40%;
+  }
 `;
 const FileName = styled(EditInput)`
   width: 256px;
@@ -241,12 +253,28 @@ const FileName = styled(EditInput)`
     font-weight: bold;
     color: #b0b0b0;
   }
+  @media screen and (max-width: 500px) {
+    width: 158px;
+    height: 53.7px;
+  }
+  @media screen and (max-width: 375px) {
+    width: 40%;
+  }
 `;
 const FileBox = styled.div`
   display: flex;
   width: 448px;
   align-items: center;
+  @media screen and (max-width: 500px) {
+    width: 348px;
+  }
+  @media screen and (max-width: 375px) {
+    width: 93%;
+    display: flex;
+    justify-content: center;
+  }
 `;
+
 const FileInput = styled.input`
   position: absolute;
   width: 1px;
@@ -264,6 +292,9 @@ const Form = styled.form`
   align-items: center;
   gap: 15px;
   width: 490px;
+  @media screen and (max-width: 500px) {
+    width: 380px;
+  }
 `;
 const Input = styled(EditInput)`
   width: 421px;
@@ -274,6 +305,13 @@ const Input = styled(EditInput)`
     font-weight: bold;
     color: #b0b0b0;
     font-family: NotoSans;
+  }
+  @media screen and (max-width: 500px) {
+    width: 348px;
+    height: 53.7px;
+  }
+  @media screen and (max-width: 375px) {
+    width: 75%;
   }
 `;
 
@@ -290,26 +328,55 @@ const Button = styled.input`
   margin-left: 670px;
   border-radius: 15px;
   margin-top: 7px;
+  @media screen and (max-width: 500px) {
+    margin-left: 0;
+  }
   /* opacity: ${(props) => (props.disabled ? "0.3" : "1")}; */
 `;
-
+const Inputdiv = styled.div`
+  @media screen and (max-width: 375px) {
+    width: 93%;
+    display: flex;
+    justify-content: center;
+  }
+`;
 const EditInputRight = styled(EditInput)`
   width: 190px;
   height: 65px;
   border-radius: 0px 15px 15px 0px;
   margin-left: 5px;
+  @media screen and (max-width: 500px) {
+    width: 158px;
+    height: 53.7px;
+  }
+  @media screen and (max-width: 375px) {
+    width: 35%;
+  }
 `;
 const EditInputLeft = styled(EditInput)`
   width: 190px;
   height: 65px;
   border-radius: 15px 0 0 15px;
   margin-right: 5px;
+  @media screen and (max-width: 500px) {
+    width: 158px;
+    height: 53.7px;
+  }
+  @media screen and (max-width: 375px) {
+    width: 35%;
+  }
 `;
 const UserProfile = styled.div`
   width: 199px;
   height: 205px;
   position: relative;
   margin-right: 20px;
+  @media screen and (max-width: 500px) {
+    width: 100px;
+    height: 80px;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
 `;
 const Num = styled.strong`
   font-size: 26.86px;
@@ -326,6 +393,13 @@ const UserDiv = styled.div`
     font-size: 37.5px;
     margin-bottom: 21px;
   }
+  @media screen and (max-width: 500px) {
+    width: 219px;
+    h1 {
+      font-size: 20px;
+      text-align: center;
+    }
+  }
 `;
 const NameDiv = styled.div``;
 const PolygonImg = styled.img`
@@ -334,6 +408,13 @@ const PolygonImg = styled.img`
   right: -45px;
   margin: 0;
   z-index: -1;
+  @media screen and (max-width: 500px) {
+    width: 93px;
+    height: 70px;
+    top: 0;
+    left: 0;
+    display: none;
+  }
 `;
 const Follow = styled.span`
   font-family: Noto Sans;
@@ -347,6 +428,11 @@ const ProImg = styled.img`
   width: 181.3px;
   height: 181.13px;
   border-radius: 50%;
+  @media screen and (max-width: 500px) {
+    width: 100px;
+    height: 100px;
+    text-align: center;
+  }
 `;
 
 export default Edit;

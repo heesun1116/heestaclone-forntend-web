@@ -1,18 +1,17 @@
 import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { faComment, faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { logUserOut } from "../apollo";
-import Button from "../components/auth/Button";
+
 import Avatar from "../components/Avatar";
 import PageTitle from "../components/PageTitle";
-import { FatText } from "../components/shared";
+
 import { PHOTO_FRAGMENT } from "../fragments";
-import useUser, { ME_QUERY } from "../hooks/useUser";
+import useUser from "../hooks/useUser";
 import Delete from "./Delete";
 
 const FOLLOW_USER_MUTATION = gql`
@@ -229,21 +228,34 @@ function Profile() {
 export default Profile;
 
 const Container = styled.div`
-  display: felx;
+  display: flex;
   width: 1357px;
   margin: 63px auto 0 auto;
   gap: 80px;
+  @media screen and (max-width: 1024px) {
+    width: 90%;
+  }
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 const Header = styled.div`
   display: flex;
   width: 289px;
   align-items: center;
   flex-direction: column;
+  @media screen and (max-width: 768px) {
+  }
 `;
 const Username = styled.h3`
   margin-top: 17px;
   font-family: Oswald;
   font-size: 25px;
+  @media screen and (max-width: 500px) {
+    font-size: 20px;
+  }
 `;
 
 const Row = styled.div`
@@ -260,15 +272,22 @@ const Value = styled.span`
   &:nth-child(2) {
     margin-left: 30px;
   }
-`;
-const Name = styled(FatText)`
-  font-size: 20px;
+  @media screen and (max-width: 500px) {
+    font-size: 15px;
+  }
 `;
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px 14px;
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media screen and (max-width: 500px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px 10px;
+  }
 `;
 
 const Photo = styled.div`
@@ -278,11 +297,22 @@ const Photo = styled.div`
   border-radius: 20px;
   width: 320px;
   height: 320px;
+  @media screen and (max-width: 500px) {
+    width: 110px;
+    height: 110px;
+  }
+  @media screen and (max-width: 320px) {
+    width: 90px;
+    height: 90px;
+  }
 `;
 const ValueDiv = styled.div`
   margin-top: 19px;
   font-family: NotoSans;
   font-size: 20px;
+  @media screen and (max-width: 500px) {
+    font-size: 15px;
+  }
 `;
 
 const Icons = styled.div`
@@ -327,4 +357,9 @@ const ProfileBtn = styled.button`
 
   padding: 10px 50px;
   cursor: pointer;
+  @media screen and (max-width: 500px) {
+    width: 214px;
+    height: 40px;
+    font-size: 15px;
+  }
 `;

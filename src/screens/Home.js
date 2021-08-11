@@ -48,6 +48,12 @@ const HomeDiv = styled.div`
   width: 947px;
   margin: 81px auto;
   display: grid;
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
 `;
 const Logout = styled.button`
   text-decoration: underline;

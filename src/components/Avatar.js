@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import User from "./User.svg";
 
 const SAvatar = styled.div`
   width: ${(props) => (props.lg ? "48px" : props.profile ? "150px" : "60px")};
@@ -9,6 +8,12 @@ const SAvatar = styled.div`
   img {
     width: 100%;
     height: 100%;
+  }
+  @media screen and (max-width: 500px) {
+    width: ${(props) =>
+      props.lg ? "48px" : props.profile ? "90.4px" : "38.6px"};
+    height: ${(props) =>
+      props.lg ? "48px" : props.profile ? "90.4px" : "38.6px"};
   }
 `;
 const Img = styled.img``;
@@ -44,6 +49,11 @@ const GradientDiv = styled.div`
       linear-gradient(#fff 0 0);
     -webkit-mask-composite: destination-out;
     mask-composite: exclude;
+  }
+  @media screen and (max-width: 500px) {
+    width: ${(props) => (props.lg ? "56px" : props.profile ? "100px" : "45px")};
+    height: ${(props) =>
+      props.lg ? "56px" : props.profile ? "100px" : "45px"};
   }
 `;
 function Avatar({ url = "", lg = false, profile = false }) {

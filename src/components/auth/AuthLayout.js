@@ -1,6 +1,4 @@
-import { useReactiveVar } from "@apollo/client";
 import styled from "styled-components";
-import { darkModeVar } from "../../apollo";
 
 const Container = styled.div`
   display: flex;
@@ -23,7 +21,6 @@ const Background = styled.div`
   z-index: -1;
 `;
 function AuthLayout({ children }) {
-  const darkMode = useReactiveVar(darkModeVar);
   return (
     <Container>
       <Background></Background>

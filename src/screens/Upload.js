@@ -1,14 +1,13 @@
-import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Route, useParams } from "react-router";
+
 import styled from "styled-components";
-import { client } from "../apollo";
+
 import Uploadform from "../components/Uploadform";
 
 const Upload = ({ open, close }) => {
   const [caption, setCaption] = useState("");
-  const { register, setValue, getValues, watch } = useForm({
+  const { register, getValues } = useForm({
     mode: "onChange",
   });
 
@@ -53,6 +52,9 @@ const Formdiv = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 500px) {
+    width: 90%;
+  }
 `;
 
 const Background = styled.div`
@@ -109,6 +111,22 @@ const Container = styled.div`
     font-family: NotoSans;
     font-size: 28px;
     font-weight: bold;
+  }
+  @media screen and (max-width: 500px) {
+    width: 90%;
+    h1 {
+      font-size: 20px;
+    }
+    input {
+      width: 92%;
+      height: 53.7px;
+    }
+    button {
+      width: 50%;
+      height: 45.1px;
+      font-size: 20px;
+      margin-left: 50%;
+    }
   }
 `;
 const CaptionInput = styled.input`
