@@ -2,7 +2,7 @@
 
 ## 01. Project background 🔎
 
-Using the Apollo + with React is good for managing the flow of data across multiple sources. For that reason, I  took an “Instagram Clone Coding with Apollo  & React” class from the Nomad Coder Acadamy. (I already had been taken a class that can be learned the apollo basic, so I have a fundamental ㅁㅐ일 e Apollo). From the course, we can learn the front-end, back-end, and app. However, the front-end lecture did not cover the full function of Instagram. So I developed additional features of Instagram and completed this ‘Heestagram’. Furthermore, I redesign the UX/UI of “Heestagram”. 
+Using the Apollo + with React is good for managing the flow of data across multiple sources. For that reason, I  took an “Instagram Clone Coding with Apollo  & React” class from the Nomad Coder Acadamy. (I already had been taken a class that can be learned the apollo basic, so I have a fundamental Apollo). From the course, we can learn the front-end, back-end, and app. However, the front-end lecture did not cover the full function of Instagram. So I developed additional features of Instagram and completed this ‘Heestagram’. Furthermore, I redesign the UX/UI of “Heestagram”. 
 
 ## 02. Project feature 📄
 
